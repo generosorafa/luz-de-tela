@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Luz de Tela",
   "short_name": "Luz",
-  "description": "Uma luz suave na tela do celular para o quarto, a mesa ou uma foto.",
+  "description": "Tela branca, luz vermelha e cores RGB com intensidade ajustável para iluminar quando precisar.",
   "lang": "pt-BR",
   "start_url": "./",
   "scope": "./",

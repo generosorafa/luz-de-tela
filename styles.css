@@ -28,7 +28,8 @@ body {
 }
 
 button,
-input {
+input,
+dialog {
   font: inherit;
 }
 
@@ -81,6 +82,67 @@ h1 span {
   cursor: pointer;
   font-size: 0.82rem;
   font-weight: 650;
+}
+
+.install-dialog {
+  width: min(calc(100% - 32px), 420px);
+  margin: auto auto max(16px, env(safe-area-inset-bottom));
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0;
+  color: var(--text);
+  background: var(--surface);
+}
+
+.install-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.76);
+}
+
+.install-dialog-content {
+  padding: 20px;
+}
+
+.install-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.install-dialog h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.install-dialog p {
+  margin: 18px 0;
+  color: #b7b7b2;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.install-close {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 50%;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.dialog-action {
+  width: 100%;
+  min-height: 48px;
+  border: 0;
+  border-radius: 8px;
+  color: #050505;
+  background: var(--text);
+  cursor: pointer;
+  font-weight: 720;
 }
 
 .tool {
@@ -318,6 +380,8 @@ h1 span {
 
 .tone-option:focus-visible .tone-swatch,
 .install-button:focus-visible,
+.install-close:focus-visible,
+.dialog-action:focus-visible,
 .primary-action:focus-visible,
 .range:focus-visible,
 .light-stage:focus-visible {
@@ -335,11 +399,40 @@ h1 span {
   padding: 24px 20px max(28px, env(safe-area-inset-bottom));
   background: var(--active-light);
   cursor: pointer;
+  touch-action: none;
   user-select: none;
 }
 
 .light-stage.active {
   display: flex;
+}
+
+.stage-feedback {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  display: grid;
+  gap: 2px;
+  transform: translate(-50%, -50%);
+  color: var(--stage-ink);
+  opacity: 0;
+  pointer-events: none;
+  text-align: center;
+  transition: opacity 140ms ease;
+}
+
+.stage-feedback.visible {
+  opacity: 0.72;
+}
+
+.stage-feedback strong {
+  font-size: 1.85rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.stage-feedback span {
+  font-size: 0.7rem;
+  font-weight: 650;
 }
 
 .tap-hint {
@@ -349,6 +442,7 @@ h1 span {
   color: var(--stage-ink);
   font-size: 0.74rem;
   font-weight: 650;
+  text-align: center;
   opacity: 0;
   animation: hint-fade 2.5s ease forwards;
 }
@@ -386,6 +480,10 @@ h1 span {
   .custom-tone input {
     width: 54px;
     height: 54px;
+  }
+
+  .install-dialog {
+    margin: auto;
   }
 }
 

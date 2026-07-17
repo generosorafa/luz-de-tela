@@ -7,22 +7,64 @@
       name="description"
       content="Transforme a tela do celular em uma luz suave para o quarto, a mesa ou uma foto. Escolha entre vermelho, tons de branco e RGB."
     />
+    <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#000000" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Luz de Tela" />
+    <link rel="canonical" href="https://generosorafa.github.io/luz-de-tela/" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Luz de Tela" />
+    <meta property="og:url" content="https://generosorafa.github.io/luz-de-tela/" />
     <meta property="og:title" content="Luz de Tela" />
     <meta
       property="og:description"
       content="Uma luz simples no navegador para usar quando precisar."
     />
+    <meta
+      property="og:image"
+      content="https://generosorafa.github.io/luz-de-tela/og.png"
+    />
+    <meta property="og:image:width" content="1536" />
+    <meta property="og:image:height" content="1024" />
+    <meta
+      property="og:image:alt"
+      content="Luz de Tela. Uma luz simples, quando precisar."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Luz de Tela" />
+    <meta
+      name="twitter:description"
+      content="Uma luz simples no navegador para usar quando precisar."
+    />
+    <meta
+      name="twitter:image"
+      content="https://generosorafa.github.io/luz-de-tela/og.png"
+    />
     <title>Luz de Tela - luz suave pelo celular</title>
     <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="sitemap" type="application/xml" href="sitemap.xml" />
     <link rel="icon" href="icons/icon-192.png" />
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
     <link rel="stylesheet" href="styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Luz de Tela",
+        "url": "https://generosorafa.github.io/luz-de-tela/",
+        "description": "Uma luz ajustável no navegador para o quarto, a mesa, uma chamada ou uma foto.",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "BRL"
+        }
+      }
+    </script>
   </head>
   <body>
     <div class="app-shell">
@@ -117,6 +159,19 @@
         </main>
       </section>
 
+      <dialog class="install-dialog" id="installDialog" aria-labelledby="installTitle">
+        <div class="install-dialog-content">
+          <div class="install-dialog-header">
+            <h2 id="installTitle">Instalar Luz de Tela</h2>
+            <button class="install-close" id="installClose" type="button" aria-label="Fechar">
+              ×
+            </button>
+          </div>
+          <p>No Safari, toque em Compartilhar e depois em Adicionar à Tela de Início.</p>
+          <button class="dialog-action" id="installDone" type="button">Entendi</button>
+        </div>
+      </dialog>
+
       <section
         class="light-stage"
         id="lightStage"
@@ -125,7 +180,13 @@
         aria-label="Luz ligada. Toque para apagar."
         aria-hidden="true"
       >
-        <span class="tap-hint"><span aria-hidden="true"></span>Toque para apagar</span>
+        <div class="stage-feedback" id="stageFeedback" aria-live="polite">
+          <strong id="stageIntensity">35%</strong>
+          <span>Intensidade</span>
+        </div>
+        <span class="tap-hint">
+          <span aria-hidden="true"></span>Deslize para ajustar · toque para apagar
+        </span>
       </section>
     </div>
 

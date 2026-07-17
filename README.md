@@ -32,6 +32,7 @@ O **Luz de Tela** oferece uma iluminação ampla e controlável usando a tela qu
 - Vermelho noturno em destaque e tons de branco prontos para uso.
 - Seletor RGB para qualquer outra cor.
 - Intensidade ajustável antes de acender.
+- Ajuste de intensidade com um gesto vertical enquanto a luz está acesa.
 - Tela de luz limpa, sem botões sobre a iluminação.
 - Um toque em qualquer lugar apaga a luz.
 - A última configuração fica salva no próprio aparelho.

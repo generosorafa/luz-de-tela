@@ -6,6 +6,8 @@
   **Uma luz ajustável que funciona direto no navegador.**
 
   Transforme a tela do celular, tablet ou computador em uma fonte de luz suave para o quarto, a mesa, uma chamada ou uma foto.
+
+  [**Abrir o Luz de Tela**](https://generosorafa.github.io/luz-de-tela/)
 </div>
 
 ---

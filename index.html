@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="Transforme a tela do celular em uma luz suave para o quarto, a mesa ou uma foto. Escolha entre vermelho, tons de branco e RGB."
+    />
+    <meta name="theme-color" content="#000000" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Luz de Tela" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:title" content="Luz de Tela" />
+    <meta
+      property="og:description"
+      content="Uma luz simples no navegador para usar quando precisar."
+    />
+    <title>Luz de Tela - luz suave pelo celular</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <section class="controls-screen" id="controlsScreen" aria-labelledby="appTitle">
+        <header class="topbar">
+          <h1 id="appTitle">Luz de Tela<span aria-hidden="true">.</span></h1>
+          <button class="install-button" id="installButton" type="button" hidden>
+            Instalar
+          </button>
+        </header>
+
+        <main class="tool">
+          <p class="tagline">Para o quarto, a mesa ou uma foto.</p>
+
+          <fieldset class="tone-fieldset">
+            <legend>Cor</legend>
+            <div class="tone-picker" id="presetGrid">
+              <button
+                class="tone-option selected"
+                type="button"
+                data-color="#ff3b30"
+                data-name="Vermelha"
+                aria-pressed="true"
+              >
+                <span class="tone-swatch red" aria-hidden="true"></span>
+                <span>Vermelha</span>
+              </button>
+              <button
+                class="tone-option"
+                type="button"
+                data-color="#edf5ff"
+                data-name="Branco gelo"
+                aria-pressed="false"
+              >
+                <span class="tone-swatch ice" aria-hidden="true"></span>
+                <span>Gelo</span>
+              </button>
+              <button
+                class="tone-option"
+                type="button"
+                data-color="#fffdf7"
+                data-name="Branco natural"
+                aria-pressed="false"
+              >
+                <span class="tone-swatch natural" aria-hidden="true"></span>
+                <span>Natural</span>
+              </button>
+              <button
+                class="tone-option"
+                type="button"
+                data-color="#ffdca8"
+                data-name="Branco quente"
+                aria-pressed="false"
+              >
+                <span class="tone-swatch warm" aria-hidden="true"></span>
+                <span>Quente</span>
+              </button>
+              <label class="tone-option custom-tone">
+                <input
+                  id="customColor"
+                  type="color"
+                  value="#66d9c7"
+                  aria-label="Escolher outra cor"
+                />
+                <span class="tone-swatch custom-swatch" id="customSwatch" aria-hidden="true"></span>
+                <span>RGB</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="intensity-control">
+            <label for="intensity">Intensidade</label>
+            <output id="intensityValue" for="intensity">35%</output>
+            <input
+              id="intensity"
+              class="range"
+              type="range"
+              min="5"
+              max="100"
+              value="35"
+              aria-label="Intensidade da luz"
+            />
+          </div>
+
+          <button class="primary-action" id="turnOn" type="button">
+            <span class="power-symbol" aria-hidden="true"></span>
+            Acender
+          </button>
+          <p class="selection-summary" id="selectionSummary" aria-live="polite">
+            Vermelha · 35%
+          </p>
+        </main>
+      </section>
+
+      <section
+        class="light-stage"
+        id="lightStage"
+        role="button"
+        tabindex="0"
+        aria-label="Luz ligada. Toque para apagar."
+        aria-hidden="true"
+      >
+        <span class="tap-hint"><span aria-hidden="true"></span>Toque para apagar</span>
+      </section>
+    </div>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>

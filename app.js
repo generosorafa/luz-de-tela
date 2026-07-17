@@ -42,7 +42,29 @@ const intensity = document.querySelector("#intensity");
 const intensityValue = document.querySelector("#intensityValue");
 const selectionSummary = document.querySelector("#selectionSummary");
 const installButton = document.querySelector("#installButton");
+const installDialog = document.querySelector("#installDialog");
+const installClose = document.querySelector("#installClose");
+const installDone = document.querySelector("#installDone");
+const stageFeedback = document.querySelector("#stageFeedback");
+const stageIntensity = document.querySelector("#stageIntensity");
 const themeColor = document.querySelector('meta[name="theme-color"]');
+
+const gesture = {
+  active: false,
+  moved: false,
+  ignoreClick: false,
+  pointerId: null,
+  startY: 0,
+  startIntensity: 0,
+  feedbackTimer: null,
+  clickResetTimer: null,
+};
+
+const isIos =
+  /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const isStandalone =
+  window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
 
 function hexToRgb(hex) {
   const clean = hex.replace("#", "");
@@ -120,6 +142,35 @@ function selectColor(color, name) {
   savePreferences();
 }
 
+function showStageFeedback() {
+  window.clearTimeout(gesture.feedbackTimer);
+  stageIntensity.textContent = `${state.intensity}%`;
+  stageFeedback.classList.add("visible");
+}
+
+function hideStageFeedbackSoon() {
+  window.clearTimeout(gesture.feedbackTimer);
+  gesture.feedbackTimer = window.setTimeout(() => {
+    stageFeedback.classList.remove("visible");
+  }, 650);
+}
+
+function closeInstallDialog() {
+  if (installDialog.open && typeof installDialog.close === "function") {
+    installDialog.close();
+  } else {
+    installDialog.removeAttribute("open");
+  }
+}
+
+function showIosInstallHelp() {
+  if (typeof installDialog.showModal === "function") {
+    installDialog.showModal();
+  } else {
+    installDialog.setAttribute("open", "");
+  }
+}
+
 async function requestWakeLock() {
   if (!("wakeLock" in navigator)) return;
 
@@ -167,6 +218,7 @@ async function turnLightOn() {
   lightStage.setAttribute("aria-hidden", "false");
   controlsScreen.setAttribute("aria-hidden", "true");
   controlsScreen.inert = true;
+  stageFeedback.classList.remove("visible");
   lightStage.focus({ preventScroll: true });
   await enterFullscreen();
   await requestWakeLock();
@@ -178,6 +230,7 @@ async function turnLightOff() {
   lightStage.setAttribute("aria-hidden", "true");
   controlsScreen.removeAttribute("aria-hidden");
   controlsScreen.inert = false;
+  stageFeedback.classList.remove("visible");
   themeColor.setAttribute("content", "#000000");
   await releaseWakeLock();
   await exitFullscreen();
@@ -201,7 +254,66 @@ intensity.addEventListener("input", (event) => {
 });
 
 turnOn.addEventListener("click", turnLightOn);
-lightStage.addEventListener("click", turnLightOff);
+lightStage.addEventListener("pointerdown", (event) => {
+  if (!event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) return;
+
+  gesture.active = true;
+  gesture.moved = false;
+  gesture.pointerId = event.pointerId;
+  gesture.startY = event.clientY;
+  gesture.startIntensity = state.intensity;
+  lightStage.setPointerCapture?.(event.pointerId);
+});
+
+lightStage.addEventListener("pointermove", (event) => {
+  if (!gesture.active || event.pointerId !== gesture.pointerId) return;
+
+  const delta = gesture.startY - event.clientY;
+  if (!gesture.moved && Math.abs(delta) < 8) return;
+
+  event.preventDefault();
+  gesture.moved = true;
+  const travel = Math.max(240, window.innerHeight * 0.6);
+  state.intensity = Math.max(
+    5,
+    Math.min(100, gesture.startIntensity + Math.round((delta / travel) * 100)),
+  );
+  updateUi();
+  showStageFeedback();
+});
+
+lightStage.addEventListener("pointerup", (event) => {
+  if (!gesture.active || event.pointerId !== gesture.pointerId) return;
+
+  gesture.active = false;
+  lightStage.releasePointerCapture?.(event.pointerId);
+  if (!gesture.moved) return;
+
+  gesture.ignoreClick = true;
+  savePreferences();
+  hideStageFeedbackSoon();
+  window.clearTimeout(gesture.clickResetTimer);
+  gesture.clickResetTimer = window.setTimeout(() => {
+    gesture.ignoreClick = false;
+  }, 500);
+});
+
+lightStage.addEventListener("pointercancel", () => {
+  gesture.active = false;
+  if (gesture.moved) {
+    savePreferences();
+    hideStageFeedbackSoon();
+  }
+});
+
+lightStage.addEventListener("click", (event) => {
+  if (gesture.ignoreClick) {
+    event.preventDefault();
+    gesture.ignoreClick = false;
+    return;
+  }
+  turnLightOff();
+});
 lightStage.addEventListener("keydown", (event) => {
   if (event.key === "Enter" || event.key === " ") {
     event.preventDefault();
@@ -216,17 +328,28 @@ window.addEventListener("beforeinstallprompt", (event) => {
 });
 
 installButton.addEventListener("click", async () => {
-  if (!state.installPrompt) return;
+  if (!state.installPrompt) {
+    if (isIos) showIosInstallHelp();
+    return;
+  }
   state.installPrompt.prompt();
   await state.installPrompt.userChoice;
   state.installPrompt = null;
   installButton.hidden = true;
 });
 
+installClose.addEventListener("click", closeInstallDialog);
+installDone.addEventListener("click", closeInstallDialog);
+installDialog.addEventListener("click", (event) => {
+  if (event.target === installDialog) closeInstallDialog();
+});
+
 window.addEventListener("appinstalled", () => {
   state.installPrompt = null;
   installButton.hidden = true;
 });
+
+if (isIos && !isStandalone) installButton.hidden = false;
 
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible" && state.isOn) requestWakeLock();

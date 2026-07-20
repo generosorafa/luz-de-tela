@@ -8,6 +8,8 @@
   Transforme a tela do celular, tablet ou computador em uma fonte de luz suave para o quarto, a mesa, uma chamada ou uma foto.
 
   [**Abrir o Luz de Tela**](https://generosorafa.github.io/luz-de-tela/)
+
+  [Conhecer o projeto](https://generosorafa.github.io/luz-de-tela/sobre/)
 </div>
 
 ---
@@ -32,6 +34,7 @@ O **Luz de Tela** oferece uma iluminação ampla e controlável usando a tela qu
 - Vermelho noturno em destaque e tons de branco prontos para uso.
 - Seletor RGB para qualquer outra cor.
 - Intensidade ajustável antes de acender.
+- Temporizador opcional de 5, 15 ou 30 minutos.
 - Ajuste de intensidade com um gesto vertical enquanto a luz está acesa.
 - Tela de luz limpa, sem botões sobre a iluminação.
 - Um toque em qualquer lugar apaga a luz.
@@ -41,7 +44,7 @@ O **Luz de Tela** oferece uma iluminação ampla e controlável usando a tela qu
 
 O Luz de Tela pode ser adicionado à tela inicial e aberto como um app. Quando compatível com o navegador, ele também tenta manter a tela acordada e usar toda a área disponível durante a iluminação.
 
-Depois do primeiro acesso, os arquivos essenciais podem continuar disponíveis mesmo sem conexão.
+Depois do primeiro acesso, os arquivos essenciais podem continuar disponíveis mesmo sem conexão. Quando uma versão nova é publicada, o aplicativo procura a atualização sem abandonar esse funcionamento offline.
 
 ## Privacidade sem atrito
 

@@ -43,11 +43,11 @@
       content="https://generosorafa.github.io/luz-de-tela/og.png"
     />
     <title>Luz de Tela: tela branca, vermelha e RGB para iluminar</title>
-    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="manifest" href="manifest.webmanifest?v=6" />
     <link rel="sitemap" type="application/xml" href="sitemap.xml" />
     <link rel="icon" href="icons/icon-192.png" />
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=6" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -65,7 +65,8 @@
           "Tela branca em tons gelo, natural e quente",
           "Luz vermelha",
           "Seletor de cores RGB",
-          "Intensidade ajustável"
+          "Intensidade ajustável",
+          "Temporizador de desligamento"
         ],
         "offers": {
           "@type": "Offer",
@@ -80,9 +81,19 @@
       <section class="controls-screen" id="controlsScreen" aria-labelledby="appTitle">
         <header class="topbar">
           <h1 id="appTitle">Luz de Tela<span aria-hidden="true">.</span></h1>
-          <button class="install-button" id="installButton" type="button" hidden>
-            Instalar
-          </button>
+          <div class="topbar-actions">
+            <a
+              class="about-link"
+              href="sobre/"
+              aria-label="Sobre o Luz de Tela"
+              title="Sobre"
+            >
+              <span aria-hidden="true">i</span>
+            </a>
+            <button class="install-button" id="installButton" type="button" hidden>
+              Instalar
+            </button>
+          </div>
         </header>
 
         <main class="tool">
@@ -158,6 +169,29 @@
             />
           </div>
 
+          <fieldset class="timer-fieldset">
+            <legend>Temporizador</legend>
+            <div class="timer-options" id="timerOptions">
+              <button
+                class="timer-option selected"
+                type="button"
+                data-minutes="0"
+                aria-pressed="true"
+              >
+                Sem timer
+              </button>
+              <button class="timer-option" type="button" data-minutes="5" aria-pressed="false">
+                5 min
+              </button>
+              <button class="timer-option" type="button" data-minutes="15" aria-pressed="false">
+                15 min
+              </button>
+              <button class="timer-option" type="button" data-minutes="30" aria-pressed="false">
+                30 min
+              </button>
+            </div>
+          </fieldset>
+
           <button class="primary-action" id="turnOn" type="button">
             <span class="power-symbol" aria-hidden="true"></span>
             Acender
@@ -165,6 +199,7 @@
           <p class="selection-summary" id="selectionSummary" aria-live="polite">
             Vermelha · 35%
           </p>
+          <p class="sr-only" id="timerStatus" aria-live="assertive"></p>
         </main>
       </section>
 
@@ -194,11 +229,12 @@
           <span>Intensidade</span>
         </div>
         <span class="tap-hint">
+          <span class="stage-timer" id="stageTimer" hidden></span>
           <span aria-hidden="true"></span>Deslize para ajustar · toque para apagar
         </span>
       </section>
     </div>
 
-    <script src="app.js" defer></script>
+    <script src="app.js?v=6" defer></script>
   </body>
 </html>

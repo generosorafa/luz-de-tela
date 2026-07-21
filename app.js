@@ -6,6 +6,12 @@ const defaults = {
   intensity: 35,
 };
 
+const shortcutPresets = {
+  vermelha: { color: "#ff3b30", name: "Vermelha" },
+  natural: { color: "#fffdf7", name: "Branco natural" },
+  quente: { color: "#ffdca8", name: "Branco quente" },
+};
+
 function readPreferences() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -24,11 +30,22 @@ function readPreferences() {
   }
 }
 
+function readShortcutPreset() {
+  const shortcutName = new URLSearchParams(window.location.search).get("tom")?.toLowerCase();
+  return shortcutPresets[shortcutName] || null;
+}
+
+const shortcutPreset = readShortcutPreset();
+
 const state = {
   ...readPreferences(),
+  ...(shortcutPreset || {}),
   wakeLock: null,
   installPrompt: null,
   isOn: false,
+  timerMinutes: 0,
+  timerId: null,
+  timerEndsAt: null,
 };
 
 const controlsScreen = document.querySelector("#controlsScreen");
@@ -40,13 +57,16 @@ const customColor = document.querySelector("#customColor");
 const customSwatch = document.querySelector("#customSwatch");
 const intensity = document.querySelector("#intensity");
 const intensityValue = document.querySelector("#intensityValue");
+const timerButtons = [...document.querySelectorAll(".timer-option")];
 const selectionSummary = document.querySelector("#selectionSummary");
+const timerStatus = document.querySelector("#timerStatus");
 const installButton = document.querySelector("#installButton");
 const installDialog = document.querySelector("#installDialog");
 const installClose = document.querySelector("#installClose");
 const installDone = document.querySelector("#installDone");
 const stageFeedback = document.querySelector("#stageFeedback");
 const stageIntensity = document.querySelector("#stageIntensity");
+const stageTimer = document.querySelector("#stageTimer");
 const themeColor = document.querySelector('meta[name="theme-color"]');
 
 const gesture = {
@@ -114,6 +134,7 @@ function savePreferences() {
 function updateUi() {
   const activeColor = dimColor(state.color, state.intensity);
   const customIsSelected = state.name === "RGB personalizada";
+  const timerLabel = state.timerMinutes > 0 ? ` · ${state.timerMinutes} min` : "";
 
   document.documentElement.style.setProperty("--accent", state.color);
   document.documentElement.style.setProperty("--active-light", activeColor.css);
@@ -123,7 +144,9 @@ function updateUi() {
   intensity.value = state.intensity;
   intensityValue.value = `${state.intensity}%`;
   intensityValue.textContent = `${state.intensity}%`;
-  selectionSummary.textContent = `${state.name} · ${state.intensity}%`;
+  selectionSummary.textContent = `${state.name} · ${state.intensity}%${timerLabel}`;
+  stageTimer.hidden = state.timerMinutes === 0;
+  stageTimer.textContent = state.timerMinutes > 0 ? `${state.timerMinutes} min` : "";
 
   presetButtons.forEach((button) => {
     const isSelected = !customIsSelected && button.dataset.color === state.color;
@@ -131,6 +154,12 @@ function updateUi() {
     button.setAttribute("aria-pressed", String(isSelected));
   });
   customTone.classList.toggle("selected", customIsSelected);
+
+  timerButtons.forEach((button) => {
+    const isSelected = Number(button.dataset.minutes) === state.timerMinutes;
+    button.classList.toggle("selected", isSelected);
+    button.setAttribute("aria-pressed", String(isSelected));
+  });
 
   if (state.isOn) themeColor.setAttribute("content", activeColor.css);
 }
@@ -140,6 +169,40 @@ function selectColor(color, name) {
   state.name = name;
   updateUi();
   savePreferences();
+}
+
+function selectTimer(minutes) {
+  state.timerMinutes = minutes;
+  timerStatus.textContent = "";
+  updateUi();
+}
+
+function clearLightTimer() {
+  window.clearTimeout(state.timerId);
+  state.timerId = null;
+  state.timerEndsAt = null;
+}
+
+function scheduleLightTimer(endTime) {
+  window.clearTimeout(state.timerId);
+  const remaining = endTime - Date.now();
+
+  if (remaining <= 0) {
+    void turnLightOff("timer");
+    return;
+  }
+
+  state.timerId = window.setTimeout(() => {
+    void turnLightOff("timer");
+  }, remaining);
+}
+
+function startLightTimer() {
+  clearLightTimer();
+  if (state.timerMinutes === 0) return;
+
+  state.timerEndsAt = Date.now() + state.timerMinutes * 60 * 1000;
+  scheduleLightTimer(state.timerEndsAt);
 }
 
 function showStageFeedback() {
@@ -213,18 +276,23 @@ async function exitFullscreen() {
 
 async function turnLightOn() {
   state.isOn = true;
+  timerStatus.textContent = "";
   updateUi();
   lightStage.classList.add("active");
   lightStage.setAttribute("aria-hidden", "false");
   controlsScreen.setAttribute("aria-hidden", "true");
   controlsScreen.inert = true;
   stageFeedback.classList.remove("visible");
+  startLightTimer();
   lightStage.focus({ preventScroll: true });
   await enterFullscreen();
   await requestWakeLock();
 }
 
-async function turnLightOff() {
+async function turnLightOff(reason = "manual") {
+  clearLightTimer();
+  if (!state.isOn) return;
+
   state.isOn = false;
   lightStage.classList.remove("active");
   lightStage.setAttribute("aria-hidden", "true");
@@ -235,6 +303,10 @@ async function turnLightOff() {
   await releaseWakeLock();
   await exitFullscreen();
   turnOn.focus({ preventScroll: true });
+
+  if (reason === "timer") {
+    timerStatus.textContent = "Temporizador concluído. A luz foi apagada.";
+  }
 }
 
 presetButtons.forEach((button) => {
@@ -251,6 +323,12 @@ intensity.addEventListener("input", (event) => {
   state.intensity = Number(event.target.value);
   updateUi();
   savePreferences();
+});
+
+timerButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    selectTimer(Number(button.dataset.minutes));
+  });
 });
 
 turnOn.addEventListener("click", turnLightOn);
@@ -352,15 +430,22 @@ window.addEventListener("appinstalled", () => {
 if (isIos && !isStandalone) installButton.hidden = false;
 
 document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible" && state.isOn) requestWakeLock();
+  if (document.visibilityState !== "visible" || !state.isOn) return;
+
+  requestWakeLock();
+  if (state.timerEndsAt) scheduleLightTimer(state.timerEndsAt);
 });
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
+    navigator.serviceWorker
+      .register("sw.js", { updateViaCache: "none" })
+      .then((registration) => registration.update())
+      .catch(() => {});
   });
 }
 
 const savedPreset = presetButtons.find((button) => button.dataset.color === state.color);
 if (!savedPreset) customColor.value = state.color;
 updateUi();
+if (shortcutPreset) savePreferences();

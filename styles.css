@@ -61,6 +61,12 @@ label {
   gap: 20px;
 }
 
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 h1 {
   margin: 0;
   font-size: 1.06rem;
@@ -82,6 +88,27 @@ h1 span {
   cursor: pointer;
   font-size: 0.82rem;
   font-weight: 650;
+}
+
+.about-link,
+.back-link {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.about-link span {
+  font-family: Georgia, serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .install-dialog {
@@ -264,6 +291,57 @@ h1 span {
   margin-top: 34px;
 }
 
+.timer-fieldset {
+  min-width: 0;
+  margin: 22px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.timer-fieldset legend {
+  margin: 0 0 10px;
+  padding: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.timer-options {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+}
+
+.timer-option {
+  min-width: 0;
+  min-height: 40px;
+  border: 0;
+  border-left: 1px solid var(--line);
+  padding: 0 8px;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.timer-option:first-child {
+  border-left: 0;
+}
+
+.timer-option.selected {
+  color: #050505;
+  background: var(--text);
+}
+
+.timer-options .timer-option:focus-visible {
+  outline-offset: -3px;
+}
+
 .intensity-control label {
   margin: 0;
 }
@@ -335,7 +413,7 @@ h1 span {
   align-items: center;
   justify-content: center;
   gap: 11px;
-  margin-top: 34px;
+  margin-top: 28px;
   border: 0;
   border-radius: 8px;
   color: #050505;
@@ -379,6 +457,12 @@ h1 span {
 }
 
 .tone-option:focus-visible .tone-swatch,
+.about-link:focus-visible,
+.back-link:focus-visible,
+.brand-link:focus-visible,
+.about-primary:focus-visible,
+.about-footer a:focus-visible,
+.timer-option:focus-visible,
 .install-button:focus-visible,
 .install-close:focus-visible,
 .dialog-action:focus-visible,
@@ -387,6 +471,16 @@ h1 span {
 .light-stage:focus-visible {
   outline: 2px solid #ffffff;
   outline-offset: 4px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .light-stage {
@@ -447,11 +541,156 @@ h1 span {
   animation: hint-fade 2.5s ease forwards;
 }
 
-.tap-hint > span {
+.tap-hint > span[aria-hidden="true"] {
   width: 7px;
   height: 7px;
+  flex: 0 0 auto;
   border: 1px solid currentColor;
   border-radius: 50%;
+}
+
+.stage-timer {
+  padding-right: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.about-page {
+  min-height: 100%;
+  background: #000000;
+}
+
+.about-shell {
+  width: min(100%, 780px);
+  min-height: 100vh;
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: max(22px, env(safe-area-inset-top)) max(22px, env(safe-area-inset-right))
+    max(28px, env(safe-area-inset-bottom)) max(22px, env(safe-area-inset-left));
+}
+
+.about-topbar {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.back-link {
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.brand-link {
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 680;
+  text-decoration: none;
+}
+
+.brand-link span,
+.about-intro h1 span {
+  color: #ff3b30;
+}
+
+.about-main {
+  padding-top: 52px;
+}
+
+.about-intro {
+  padding: 0 0 68px;
+}
+
+.about-icon {
+  width: 72px;
+  height: 72px;
+  display: block;
+  margin-bottom: 28px;
+  border-radius: 8px;
+}
+
+.about-intro h1 {
+  max-width: 620px;
+  margin: 0;
+  font-size: 3rem;
+  font-weight: 650;
+  line-height: 1.02;
+}
+
+.about-intro > p {
+  max-width: 610px;
+  margin: 24px 0 0;
+  color: #b7b7b2;
+  font-size: 1.16rem;
+  line-height: 1.6;
+}
+
+.about-primary {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 32px;
+  border-radius: 8px;
+  padding: 0 18px;
+  color: #050505;
+  background: var(--text);
+  font-size: 0.88rem;
+  font-weight: 720;
+  text-decoration: none;
+}
+
+.about-section {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 46px;
+  padding: 44px 0;
+  border-top: 1px solid var(--line);
+}
+
+.about-section h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 680;
+  line-height: 1.35;
+}
+
+.about-section p,
+.about-list {
+  margin: 0;
+  color: #b7b7b2;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.about-section p + p {
+  margin-top: 16px;
+}
+
+.about-list {
+  display: grid;
+  gap: 12px;
+  padding-left: 20px;
+}
+
+.about-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 42px 0 18px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.about-footer p {
+  margin: 0;
+}
+
+.about-footer a {
+  color: var(--text);
+  text-underline-offset: 3px;
 }
 
 @keyframes hint-fade {
@@ -497,9 +736,46 @@ h1 span {
     margin-bottom: 30px;
   }
 
-  .intensity-control,
-  .primary-action {
+  .intensity-control {
     margin-top: 24px;
+  }
+
+  .timer-fieldset {
+    margin-top: 18px;
+  }
+
+  .primary-action {
+    margin-top: 22px;
+  }
+}
+
+@media (max-width: 620px) {
+  .about-main {
+    padding-top: 42px;
+  }
+
+  .about-intro {
+    padding-bottom: 54px;
+  }
+
+  .about-intro h1 {
+    font-size: 2.35rem;
+  }
+
+  .about-intro > p {
+    font-size: 1rem;
+  }
+
+  .about-section {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 34px 0;
+  }
+
+  .about-footer {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
   }
 }
 

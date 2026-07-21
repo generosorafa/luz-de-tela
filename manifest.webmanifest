@@ -25,5 +25,28 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Luz vermelha",
+      "short_name": "Vermelha",
+      "description": "Preparar a luz vermelha",
+      "url": "./?tom=vermelha",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Luz natural",
+      "short_name": "Natural",
+      "description": "Preparar a luz branca natural",
+      "url": "./?tom=natural",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Luz quente",
+      "short_name": "Quente",
+      "description": "Preparar a luz branca quente",
+      "url": "./?tom=quente",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
   ]
 }

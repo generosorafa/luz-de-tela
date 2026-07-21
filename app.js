@@ -6,6 +6,12 @@ const defaults = {
   intensity: 35,
 };
 
+const shortcutPresets = {
+  vermelha: { color: "#ff3b30", name: "Vermelha" },
+  natural: { color: "#fffdf7", name: "Branco natural" },
+  quente: { color: "#ffdca8", name: "Branco quente" },
+};
+
 function readPreferences() {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -24,8 +30,16 @@ function readPreferences() {
   }
 }
 
+function readShortcutPreset() {
+  const shortcutName = new URLSearchParams(window.location.search).get("tom")?.toLowerCase();
+  return shortcutPresets[shortcutName] || null;
+}
+
+const shortcutPreset = readShortcutPreset();
+
 const state = {
   ...readPreferences(),
+  ...(shortcutPreset || {}),
   wakeLock: null,
   installPrompt: null,
   isOn: false,
@@ -434,3 +448,4 @@ if ("serviceWorker" in navigator) {
 const savedPreset = presetButtons.find((button) => button.dataset.color === state.color);
 if (!savedPreset) customColor.value = state.color;
 updateUi();
+if (shortcutPreset) savePreferences();

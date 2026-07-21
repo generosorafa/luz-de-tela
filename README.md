@@ -35,6 +35,7 @@ O **Luz de Tela** oferece uma iluminação ampla e controlável usando a tela qu
 - Seletor RGB para qualquer outra cor.
 - Intensidade ajustável antes de acender.
 - Temporizador opcional de 5, 15 ou 30 minutos.
+- Atalhos para preparar as luzes vermelha, natural e quente no Android.
 - Ajuste de intensidade com um gesto vertical enquanto a luz está acesa.
 - Tela de luz limpa, sem botões sobre a iluminação.
 - Um toque em qualquer lugar apaga a luz.

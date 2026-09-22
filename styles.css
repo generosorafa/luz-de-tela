@@ -456,12 +456,23 @@ h1 span {
   text-align: center;
 }
 
+.guide-link {
+  align-self: center;
+  margin-top: 16px;
+  color: #b7b7b2;
+  font-size: 0.78rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .tone-option:focus-visible .tone-swatch,
 .about-link:focus-visible,
 .back-link:focus-visible,
 .brand-link:focus-visible,
 .about-primary:focus-visible,
 .about-footer a:focus-visible,
+.guide-link:focus-visible,
+.about-section a:focus-visible,
 .timer-option:focus-visible,
 .install-button:focus-visible,
 .install-close:focus-visible,
@@ -667,6 +678,47 @@ h1 span {
   margin-top: 16px;
 }
 
+.about-section a {
+  color: var(--text);
+  text-underline-offset: 3px;
+}
+
+.guide-main {
+  padding-top: 64px;
+}
+
+.guide-intro {
+  padding-bottom: 56px;
+}
+
+.guide-intro h1 {
+  max-width: 620px;
+  font-size: 2.35rem;
+  line-height: 1.12;
+}
+
+.guide-intro > p {
+  max-width: 610px;
+  margin: 24px 0 0;
+  color: #b7b7b2;
+  font-size: 1.04rem;
+  line-height: 1.65;
+}
+
+.guide-steps {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding-left: 22px;
+  color: #b7b7b2;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.guide-steps li::marker {
+  color: var(--text);
+}
+
 .about-list {
   display: grid;
   gap: 12px;
@@ -750,6 +802,14 @@ h1 span {
 }
 
 @media (max-width: 620px) {
+  .guide-main {
+    padding-top: 48px;
+  }
+
+  .guide-intro h1 {
+    font-size: 1.9rem;
+  }
+
   .about-main {
     padding-top: 42px;
   }

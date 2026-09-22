@@ -1,11 +1,13 @@
-const CACHE_NAME = "luz-de-tela-v6";
+const CACHE_NAME = "luz-de-tela-v7";
 const OFFLINE_URL = "./";
 const ASSETS = [
   "./",
   "index.html",
   "sobre/",
   "sobre/index.html",
-  "styles.css?v=6",
+  "guia/",
+  "guia/index.html",
+  "styles.css?v=7",
   "app.js?v=6",
   "manifest.webmanifest?v=6",
   "icons/icon-192.png",
